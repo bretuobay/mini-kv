@@ -1,7 +1,3 @@
-Awesome choice. A **MiniKV** is the perfect next building block in your ecosystem, and if you spec it well, you’ll be able to reuse it across _all_ your other projects.
-
-Below is a **clean, language-agnostic specification document** (PRD + technical boundaries) that matches the level and tone of your MiniSearchDB work. It’s intentionally Redis-inspired but **embedded-first**, not network-first.
-
 ---
 
 # MiniKV — Specification Document
