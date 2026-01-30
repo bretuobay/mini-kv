@@ -31,7 +31,7 @@ type Header struct {
 }
 
 var (
-	ErrInvalidSnapshot = errors.New("snapshot: invalid file")
+	ErrInvalidSnapshot  = errors.New("snapshot: invalid file")
 	ErrSnapshotChecksum = errors.New("snapshot: checksum mismatch")
 )
 

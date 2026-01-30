@@ -1101,6 +1101,17 @@ docs/
 └── migration_guide.md
 ```
 
+**Implementation Note (2026-01-30):**
+The Go module root is the repository root. It is normal (and idiomatic) for core files
+like `minikv.go`, `options.go`, and `errors.go` to live at the repo root. The folders
+`cmd/`, `examples/`, `benchmarks/`, and `docs/` will be added incrementally as features
+stabilize. Avoid nesting a secondary `minikv/` folder inside the repo, since that would
+change import paths and complicate module usage.
+
+**Doc Note (2026-01-30):**
+Compaction and MANIFEST update flows are documented in `docs/architecture.md` and
+`docs/file_formats.md`. Refer there for current on-disk formats and recovery steps.
+
 ---
 
 ## 14. Implementation Roadmap

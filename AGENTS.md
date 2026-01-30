@@ -20,6 +20,8 @@ MiniKV is a pure-Go, embedded key-value database focused on correctness, durabil
 - Keep APIs small and predictable; prefer clear errors over panics.
 - Preserve deterministic file formats (WAL, snapshot, MANIFEST).
 - Use CRC32 for record integrity as specified.
+ - Repo root is the Go module root; top-level files are expected. Do not create a nested `minikv/` folder.
+ - Add `cmd/`, `examples/`, `benchmarks/`, and `docs/` folders only when their contents are implemented.
 
 ## Testing
 - Add unit tests for correctness and edge cases.

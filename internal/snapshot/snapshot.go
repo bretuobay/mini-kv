@@ -20,7 +20,7 @@ func NewManager(dir string) *Manager {
 
 // CreateSnapshot writes a snapshot file from the provided entries.
 // Expired entries (expiresAt >=0 and <= now) are excluded.
-func (m *Manager) CreateSnapshot(entries []Entry, version uint32, timestamp int64) (string, error) {
+func (m *Manager) CreateSnapshot(entries []Entry, version uint32, timestamp int64, seq uint64) (string, error) {
 	if err := os.MkdirAll(m.dir, 0o755); err != nil {
 		return "", err
 	}
@@ -33,8 +33,6 @@ func (m *Manager) CreateSnapshot(entries []Entry, version uint32, timestamp int6
 		filtered = append(filtered, entry)
 	}
 
-	// Ensure deterministic order when naming snapshots.
-	seq := timestamp
 	path := filepath.Join(m.dir, snapshotName(seq))
 	file, err := os.Create(path)
 	if err != nil {
@@ -77,9 +75,6 @@ func (m *Manager) ListSnapshots() ([]string, error) {
 	return paths, nil
 }
 
-func snapshotName(seq int64) string {
-	if seq < 0 {
-		seq = -seq
-	}
+func snapshotName(seq uint64) string {
 	return fmt.Sprintf("snapshot_%06d.snap", seq)
 }

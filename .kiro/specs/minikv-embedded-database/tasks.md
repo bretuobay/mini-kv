@@ -14,7 +14,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
   - Set up testing framework with `gopter` for property-based testing
   - _Requirements: 2.8, 2.9, 12.1, 12.2_
 
-- [ ] 2. In-Memory Index Implementation
+- [x] 2. In-Memory Index Implementation
   - [x] 2.1 Implement `MemIndex` with HashMap backing
     - Implement `Set(key, value, expiresAt)` method
     - Implement `Get(key)` method with expiration checking
@@ -41,7 +41,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 5: Exists Reflects Key State**
     - **Validates: Requirements 2.7**
 
-- [ ] 3. WAL Format and Encoding
+- [x] 3. WAL Format and Encoding
   - [x] 3.1 Implement WAL record encoding
     - Define `WALRecord` struct with Type, Timestamp, Key, Value, ExpiresAt
     - Implement `EncodeWALRecord(record)` with varint encoding for lengths
@@ -54,7 +54,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 13: WAL Encoding Round Trip**
     - **Validates: Requirements 3.1, 3.5, 3.7, 14.1**
 
-- [ ] 4. WAL Manager Implementation
+- [x] 4. WAL Manager Implementation
   - [x] 4.1 Implement WAL file management
     - Create `WALManager` struct with file handle, sequence number, size tracking
     - Implement `Open(dir)` to create or open WAL directory
@@ -79,7 +79,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 15: Checksum Detects Corruption**
     - **Validates: Requirements 4.2, 4.3**
 
-- [ ] 5. Snapshot Format and Manager
+- [x] 5. Snapshot Format and Manager
   - [x] 5.1 Implement snapshot encoding
     - Define snapshot header with magic number "MINIKVSN", version, timestamp, count
     - Implement `EncodeSnapshot(entries)` to write sorted key-value pairs
@@ -102,7 +102,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 17: Snapshot Contains All Non-Expired Keys**
     - **Validates: Requirements 5.1, 6.11**
 
-- [ ] 6. MANIFEST File Management
+- [x] 6. MANIFEST File Management
   - [x] 6.1 Implement MANIFEST format
     - Define `Manifest` struct with WAL sequence, snapshot sequence, segment lists
     - Implement `WriteManifest(path, manifest)` using atomic write-then-rename
@@ -114,7 +114,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 51: MANIFEST Tracks State**
     - **Validates: Requirements 14.4**
 
-- [ ] 7. Database Lifecycle Operations
+- [x] 7. Database Lifecycle Operations
   - [x] 7.1 Implement database Open
     - Implement `Open(opts Options)` function
     - Create directory structure if it doesn't exist
@@ -144,7 +144,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 11: Close Releases Lock**
     - **Validates: Requirements 1.4**
 
-- [ ] 8. Core CRUD Operations
+- [x] 8. Core CRUD Operations
   - [x] 8.1 Implement Get operation
     - Implement `Get(key)` method
     - Acquire read lock on index
@@ -185,10 +185,10 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - **Property 7: Value Size Validation**
     - **Validates: Requirements 2.1-2.9**
 
-- [ ] 9. Checkpoint - Ensure all tests pass
+- [x] 9. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. TTL Support
+- [x] 10. TTL Support
   - [x] 10.1 Implement TTL operations
     - Implement `SetWithTTL(key, value, ttl)` method
     - Calculate expiration timestamp from TTL duration
@@ -198,31 +198,31 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Implement `Persist(key)` to remove expiration
     - _Requirements: 6.1, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9_
   
-  - [ ] 10.2 Implement lazy TTL deletion
+  - [x] 10.2 Implement lazy TTL deletion
     - Check expiration in `Get` and delete if expired
     - Check expiration in `Exists`
     - Check expiration during iteration
     - _Requirements: 6.2, 8.5_
   
-  - [ ] 10.3 Implement background TTL cleaner
+  - [x] 10.3 Implement background TTL cleaner
     - Create background goroutine that runs every 1 second
     - Scan subset of keys for expired entries
     - Delete expired keys
     - Limit cleanup time to 10ms per iteration
     - _Requirements: 6.10_
   
-  - [ ]* 10.4 Write property test for TTL expiration
+  - [x]* 10.4 Write property test for TTL expiration
     - **Property 22: TTL Expiration**
     - **Property 23: TTL Query Returns Remaining Duration**
     - **Validates: Requirements 6.1, 6.2, 6.3**
   
-  - [ ]* 10.5 Write property test for Expire and Persist
+  - [x]* 10.5 Write property test for Expire and Persist
     - **Property 24: Expire Sets Expiration**
     - **Property 25: Persist Removes Expiration**
     - **Validates: Requirements 6.6, 6.8**
 
-- [ ] 11. Batch Operations
-  - [ ] 11.1 Implement Batch interface
+- [x] 11. Batch Operations
+  - [x] 11.1 Implement Batch interface
     - Create `batchImpl` struct with operation buffer
     - Implement `Set(key, value)` to buffer operation
     - Implement `SetWithTTL(key, value, ttl)` to buffer operation
@@ -232,7 +232,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Implement `Discard()` to abandon operations
     - _Requirements: 7.1, 7.5, 7.6, 7.7_
   
-  - [ ] 11.2 Implement atomic batch Write
+  - [x] 11.2 Implement atomic batch Write
     - Implement `Write()` method
     - Validate batch size doesn't exceed MaxBatchSize
     - Acquire write lock
@@ -244,21 +244,21 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Rollback on any error
     - _Requirements: 7.2, 7.3, 7.4, 7.6_
   
-  - [ ]* 11.3 Write property test for batch atomicity
+  - [x]* 11.3 Write property test for batch atomicity
     - **Property 27: Batch Write Is Atomic**
     - **Validates: Requirements 7.2, 7.3, 7.4**
   
-  - [ ]* 11.4 Write property test for batch buffering
+  - [x]* 11.4 Write property test for batch buffering
     - **Property 26: Batch Operations Are Buffered**
     - **Property 28: Batch Discard Abandons Operations**
     - **Validates: Requirements 7.1, 7.5**
   
-  - [ ]* 11.5 Write property test for batch size validation
+  - [x]* 11.5 Write property test for batch size validation
     - **Property 29: Batch Size Validation**
     - **Validates: Requirements 7.6**
 
-- [ ] 12. Iteration and Scanning
-  - [ ] 12.1 Implement Iterator interface
+- [x] 12. Iteration and Scanning
+  - [x] 12.1 Implement Iterator interface
     - Create `iteratorImpl` struct with snapshot of keys
     - Implement `Next()` to advance to next key
     - Implement `Key()` to return current key
@@ -267,7 +267,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Implement `Close()` to release resources
     - _Requirements: 8.1, 8.2, 8.3, 8.4_
   
-  - [ ] 12.2 Implement Scan operations
+  - [x] 12.2 Implement Scan operations
     - Implement `Scan(prefix, limit)` to create prefix iterator
     - Implement `ScanRange(start, end, limit)` to create range iterator
     - Create snapshot of index at iterator creation time
@@ -277,55 +277,55 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Apply limit if specified
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.8_
   
-  - [ ] 12.3 Implement Keys and Count
+  - [x] 12.3 Implement Keys and Count
     - Implement `Keys(pattern)` using glob pattern matching
     - Implement `Count()` to return non-expired key count
     - _Requirements: 8.6, 8.7_
   
-  - [ ]* 12.4 Write property test for scan prefix filtering
+  - [x]* 12.4 Write property test for scan prefix filtering
     - **Property 30: Scan Prefix Filtering**
     - **Validates: Requirements 8.1**
   
-  - [ ]* 12.5 Write property test for scan range filtering
+  - [x]* 12.5 Write property test for scan range filtering
     - **Property 31: ScanRange Filtering**
     - **Validates: Requirements 8.2**
   
-  - [ ]* 12.6 Write property test for iterator ordering
+  - [x]* 12.6 Write property test for iterator ordering
     - **Property 32: Iterator Returns Sorted Keys**
     - **Validates: Requirements 8.3**
   
-  - [ ]* 12.7 Write property test for iterator snapshot isolation
+  - [x]* 12.7 Write property test for iterator snapshot isolation
     - **Property 33: Iterator Snapshot Isolation**
     - **Validates: Requirements 8.4, 10.4**
   
-  - [ ]* 12.8 Write property test for iterator TTL filtering
+  - [x]* 12.8 Write property test for iterator TTL filtering
     - **Property 34: Iterator Skips Expired Keys**
     - **Validates: Requirements 8.5**
   
-  - [ ]* 12.9 Write property test for Keys pattern matching
+  - [x]* 12.9 Write property test for Keys pattern matching
     - **Property 35: Keys Pattern Matching**
     - **Validates: Requirements 8.6**
   
-  - [ ]* 12.10 Write property test for Count
+  - [x]* 12.10 Write property test for Count
     - **Property 36: Count Returns Non-Expired Key Count**
     - **Validates: Requirements 8.7**
   
-  - [ ]* 12.11 Write property test for iterator limit
+  - [x]* 12.11 Write property test for iterator limit
     - **Property 37: Iterator Limit**
     - **Validates: Requirements 8.8**
 
-- [ ] 13. Checkpoint - Ensure all tests pass
+- [x] 13. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 14. Extended Atomic Operations
-  - [ ] 14.1 Implement SetNX
+- [x] 14. Extended Atomic Operations
+  - [x] 14.1 Implement SetNX
     - Implement `SetNX(key, value)` method
     - Check if key exists in index
     - If not exists, call Set and return true
     - If exists, return false without modifying
     - _Requirements: 9.1, 9.2_
   
-  - [ ] 14.2 Implement integer operations
+  - [x] 14.2 Implement integer operations
     - Implement `Incr(key)` to increment by 1
     - Implement `Decr(key)` to decrement by 1
     - Implement `IncrBy(key, delta)` to increment by delta
@@ -333,7 +333,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Create key with value 1 if doesn't exist (for Incr)
     - _Requirements: 9.3, 9.4, 9.5, 9.6, 9.7_
   
-  - [ ] 14.3 Implement CompareAndSwap
+  - [x] 14.3 Implement CompareAndSwap
     - Implement `CompareAndSwap(key, old, new)` method
     - Acquire write lock
     - Get current value
@@ -342,7 +342,7 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - If no match, return false
     - _Requirements: 9.8, 9.9_
   
-  - [ ] 14.4 Implement GetAndSet
+  - [x] 14.4 Implement GetAndSet
     - Implement `GetAndSet(key, value)` method
     - Acquire write lock
     - Get current value
@@ -350,32 +350,32 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Return old value
     - _Requirements: 9.10_
   
-  - [ ]* 14.5 Write property test for SetNX
+  - [x]* 14.5 Write property test for SetNX
     - **Property 38: SetNX Conditional Set**
     - **Validates: Requirements 9.1, 9.2**
   
-  - [ ]* 14.6 Write property test for integer operations
+  - [x]* 14.6 Write property test for integer operations
     - **Property 39: Integer Operations**
     - **Property 40: Incr Non-Integer Error**
     - **Validates: Requirements 9.3, 9.5, 9.6, 9.7**
   
-  - [ ]* 14.7 Write property test for CompareAndSwap
+  - [x]* 14.7 Write property test for CompareAndSwap
     - **Property 41: CompareAndSwap Success**
     - **Property 42: CompareAndSwap Failure**
     - **Validates: Requirements 9.8, 9.9**
   
-  - [ ]* 14.8 Write property test for GetAndSet
+  - [x]* 14.8 Write property test for GetAndSet
     - **Property 43: GetAndSet Atomic Swap**
     - **Validates: Requirements 9.10**
 
-- [ ] 15. Compaction Implementation
-  - [ ] 15.1 Implement compaction trigger logic
+- [x] 15. Compaction Implementation
+  - [x] 15.1 Implement compaction trigger logic
     - Monitor WAL size after each write
     - Trigger compaction when size exceeds MaxWALSize
     - Implement `Compact()` method for manual compaction
     - _Requirements: 3.6, 5.6, 5.7_
   
-  - [ ] 15.2 Implement compaction process
+  - [x] 15.2 Implement compaction process
     - Create new snapshot with incremented sequence number
     - Write all non-expired keys to snapshot in sorted order
     - Fsync snapshot file
@@ -385,48 +385,48 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Run compaction in background goroutine
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
   
-  - [ ]* 15.3 Write property test for compaction triggers
+  - [x]* 15.3 Write property test for compaction triggers
     - **Property 14: Compaction Triggers on WAL Size**
     - **Validates: Requirements 3.6**
   
-  - [ ]* 15.4 Write property test for compaction updates MANIFEST
+  - [x]* 15.4 Write property test for compaction updates MANIFEST
     - **Property 19: Compaction Updates MANIFEST**
     - **Validates: Requirements 5.3**
   
-  - [ ]* 15.5 Write property test for compaction deletes old WAL
+  - [x]* 15.5 Write property test for compaction deletes old WAL
     - **Property 20: Compaction Deletes Old WAL**
     - **Validates: Requirements 5.4**
   
-  - [ ]* 15.6 Write property test for compaction concurrency
+  - [x]* 15.6 Write property test for compaction concurrency
     - **Property 21: Compaction Allows Concurrent Operations**
     - **Validates: Requirements 5.5**
 
-- [ ] 16. Concurrency and Thread Safety
-  - [ ] 16.1 Implement locking strategy
+  - [x] 16. Concurrency and Thread Safety
+  - [x] 16.1 Implement locking strategy
     - Use `sync.RWMutex` for index access
     - Use `sync.Mutex` for WAL writes
     - Ensure consistent lock hierarchy to prevent deadlocks
     - _Requirements: 10.1, 10.2, 10.5, 10.6_
   
-  - [ ] 16.2 Implement read-your-writes guarantee
+  - [x] 16.2 Implement read-your-writes guarantee
     - Ensure writes are visible immediately in same goroutine
     - Use memory barriers appropriately
     - _Requirements: 10.3_
   
-  - [ ]* 16.3 Write property test for concurrent reads
+  - [x]* 16.3 Write property test for concurrent reads
     - **Property 44: Concurrent Reads Are Safe**
     - **Validates: Requirements 10.1**
   
-  - [ ]* 16.4 Write property test for concurrent writes
+  - [x]* 16.4 Write property test for concurrent writes
     - **Property 45: Concurrent Writes Are Serialized**
     - **Validates: Requirements 10.2**
   
-  - [ ]* 16.5 Write property test for read-your-writes
+  - [x]* 16.5 Write property test for read-your-writes
     - **Property 46: Read-Your-Writes**
     - **Validates: Requirements 10.3**
 
-- [ ] 17. Context Support
-  - [ ] 17.1 Implement context-aware operations
+  - [x] 17. Context Support
+  - [x] 17.1 Implement context-aware operations
     - Implement `GetWithContext(ctx, key)` method
     - Implement `SetWithContext(ctx, key, value)` method
     - Check context cancellation before acquiring locks
@@ -434,33 +434,33 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Return context.Canceled or context.DeadlineExceeded appropriately
     - _Requirements: 11.1, 11.2, 11.3, 11.4_
   
-  - [ ]* 17.2 Write property test for context cancellation
+  - [x]* 17.2 Write property test for context cancellation
     - **Property 47: Context Cancellation**
     - **Validates: Requirements 11.1, 11.2, 11.3**
 
-- [ ] 18. Read-Only Mode and Error Handling
-  - [ ] 18.1 Implement read-only mode
+  - [x] 18. Read-Only Mode and Error Handling
+  - [x] 18.1 Implement read-only mode
     - Add `ReadOnly` flag to Options
     - Check flag before all write operations
     - Return ErrReadOnly for write attempts
     - _Requirements: 1.6, 12.3_
   
-  - [ ] 18.2 Implement closed state handling
+  - [x] 18.2 Implement closed state handling
     - Add `closed` flag to DB struct
     - Check flag at start of all operations
     - Return ErrClosed if database is closed
     - _Requirements: 12.4_
   
-  - [ ]* 18.3 Write property test for read-only mode
+  - [x]* 18.3 Write property test for read-only mode
     - **Property 12: Read-Only Mode Prevents Writes**
     - **Validates: Requirements 1.6**
   
-  - [ ]* 18.4 Write property test for closed database
+  - [x]* 18.4 Write property test for closed database
     - **Property 48: Closed Database Returns Error**
     - **Validates: Requirements 12.4**
 
-- [ ] 19. Observability and Metrics
-  - [ ] 19.1 Implement Stats collection
+- [x] 19. Observability and Metrics
+  - [x] 19.1 Implement Stats collection
     - Create `Stats` struct with counters and gauges
     - Track key count, WAL size, snapshot count, memory usage
     - Track operation counters (reads, writes, deletes, scans)
@@ -468,28 +468,28 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Implement `Stats()` method to return current stats
     - _Requirements: 13.1, 13.2, 13.3_
   
-  - [ ] 19.2 Implement DumpKeys for debugging
+  - [x] 19.2 Implement DumpKeys for debugging
     - Implement `DumpKeys(w io.Writer)` method
     - Write all non-expired keys to writer
     - Include key, value length, expiration info
     - _Requirements: 13.5_
   
-  - [ ]* 19.3 Write property test for Stats
+  - [x]* 19.3 Write property test for Stats
     - **Property 49: Stats Reflects Database State**
     - **Validates: Requirements 13.1, 13.2**
   
-  - [ ]* 19.4 Write property test for DumpKeys
+  - [x]* 19.4 Write property test for DumpKeys
     - **Property 50: DumpKeys Writes All Keys**
     - **Validates: Requirements 13.5**
 
-- [ ] 20. Background Workers
-  - [ ] 20.1 Implement periodic sync worker
+- [x] 20. Background Workers
+  - [x] 20.1 Implement periodic sync worker
     - Create goroutine that runs when SyncMode is SyncPeriodic
     - Call fsync every 1 second
     - Stop on database close
     - _Requirements: 3.3_
   
-  - [ ] 20.2 Implement TTL cleanup worker
+  - [x] 20.2 Implement TTL cleanup worker
     - Create goroutine that runs every 1 second
     - Scan subset of keys for expired entries
     - Delete expired keys
@@ -497,80 +497,80 @@ This implementation plan breaks down the MiniKV embedded database into discrete,
     - Stop on database close
     - _Requirements: 6.10_
   
-  - [ ] 20.3 Implement graceful shutdown
+  - [x] 20.3 Implement graceful shutdown
     - Stop all background workers on Close
     - Wait for workers to finish using sync.WaitGroup
     - Ensure no goroutine leaks
     - _Requirements: 1.4_
 
-- [ ] 21. Checkpoint - Ensure all tests pass
+- [x] 21. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 22. Integration Testing
-  - [ ]* 22.1 Write integration test for full lifecycle
+- [x] 22. Integration Testing
+  - [x]* 22.1 Write integration test for full lifecycle
     - Test open → write → close → reopen cycle
     - Verify all data persists across restarts
     - Test with various data sizes and patterns
   
-  - [ ]* 22.2 Write integration test for crash recovery
+  - [x]* 22.2 Write integration test for crash recovery
     - Simulate crash by killing process without Close
     - Reopen database and verify data integrity
     - Test with different crash points
   
-  - [ ]* 22.3 Write integration test for concurrent operations
+  - [x]* 22.3 Write integration test for concurrent operations
     - Run multiple goroutines performing reads and writes
     - Verify no data races using race detector
     - Verify all operations complete correctly
   
-  - [ ]* 22.4 Write integration test for large dataset
+  - [x]* 22.4 Write integration test for large dataset
     - Write 1 million keys
     - Verify startup time is under 1 second
     - Verify memory usage is reasonable
     - Verify all operations still work correctly
 
-- [ ] 23. Benchmarking and Performance Tuning
-  - [ ]* 23.1 Write benchmarks for core operations
+- [x] 23. Benchmarking and Performance Tuning
+  - [x]* 23.1 Write benchmarks for core operations
     - Benchmark Get operation (target: 200K ops/sec)
     - Benchmark Set operation (target: 50K ops/sec batched)
     - Benchmark Delete operation
     - Benchmark Scan operation
     - Benchmark batch writes
   
-  - [ ]* 23.2 Write benchmarks for startup time
+  - [x]* 23.2 Write benchmarks for startup time
     - Benchmark startup with 10K, 100K, 1M keys
     - Verify 1M keys loads in under 1 second
   
-  - [ ]* 23.3 Profile memory usage
+  - [x]* 23.3 Profile memory usage
     - Measure memory overhead per key
     - Verify under 100 bytes per key
     - Identify and fix memory leaks
   
-  - [ ]* 23.4 Optimize hot paths
+  - [x]* 23.4 Optimize hot paths
     - Profile CPU usage
     - Optimize encoding/decoding
     - Optimize index lookups
     - Reduce allocations in hot paths
 
-- [ ] 24. Documentation and Examples
-  - [ ]* 24.1 Write API documentation
+- [x] 24. Documentation and Examples
+  - [x] 24.1 Write API documentation
     - Document all public types and methods
     - Include usage examples
     - Document error conditions
     - Document performance characteristics
   
-  - [ ]* 24.2 Write architecture documentation
+  - [x] 24.2 Write architecture documentation
     - Document storage format
     - Document recovery process
     - Document compaction strategy
     - Include diagrams
   
-  - [ ]* 24.3 Create example applications
+  - [x] 24.3 Create example applications
     - Basic usage example
     - Caching example with TTL
     - Batch operations example
     - Integration with MiniSearchDB example
 
-- [ ] 25. Final Checkpoint - Ensure all tests pass
+- [x] 25. Final Checkpoint - Ensure all tests pass
   - Run all unit tests
   - Run all property tests with 1000 iterations
   - Run all integration tests

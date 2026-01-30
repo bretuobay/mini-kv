@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"hash/crc32"
+	"sync"
 )
 
 // RecordType identifies WAL operation kinds.
@@ -24,9 +25,16 @@ type WALRecord struct {
 }
 
 var (
-	ErrInvalidRecord   = errors.New("wal: invalid record")
+	ErrInvalidRecord    = errors.New("wal: invalid record")
 	ErrChecksumMismatch = errors.New("wal: checksum mismatch")
 )
+
+var encodeBufPool = sync.Pool{
+	New: func() any {
+		buf := make([]byte, 0, 1024)
+		return &buf
+	},
+}
 
 // EncodeWALRecord encodes a record with varint lengths and CRC32 checksum.
 func EncodeWALRecord(record WALRecord) []byte {
@@ -36,10 +44,17 @@ func EncodeWALRecord(record WALRecord) []byte {
 	payloadLen := 1 + 8 + 8 +
 		uvarintSize(keyLen) + uvarintSize(valueLen) +
 		int(keyLen) + int(valueLen) + 4
-	lengthBuf := make([]byte, binary.MaxVarintLen64)
-	lengthN := binary.PutUvarint(lengthBuf, uint64(payloadLen))
+	var lengthBuf [binary.MaxVarintLen64]byte
+	lengthN := binary.PutUvarint(lengthBuf[:], uint64(payloadLen))
 
-	payload := make([]byte, payloadLen)
+	bufPtr := encodeBufPool.Get().(*[]byte)
+	payload := *bufPtr
+	if cap(payload) < payloadLen {
+		payload = make([]byte, payloadLen)
+	} else {
+		payload = payload[:payloadLen]
+	}
+
 	payload[0] = byte(record.Type)
 	binary.LittleEndian.PutUint64(payload[1:9], uint64(record.Timestamp))
 	binary.LittleEndian.PutUint64(payload[9:17], uint64(record.ExpiresAt))
@@ -57,6 +72,10 @@ func EncodeWALRecord(record WALRecord) []byte {
 	out := make([]byte, lengthN+len(payload))
 	copy(out, lengthBuf[:lengthN])
 	copy(out[lengthN:], payload)
+
+	*bufPtr = payload[:0]
+	encodeBufPool.Put(bufPtr)
+
 	return out
 }
 

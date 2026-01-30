@@ -78,7 +78,9 @@ func Open(opts Options) (*DB, error) {
 		return nil, err
 	}
 
-	return &DB{
+	_ = refreshManifest(opts.Path)
+
+	db := &DB{
 		path:     opts.Path,
 		opts:     opts,
 		index:    idx,
@@ -86,7 +88,15 @@ func Open(opts Options) (*DB, error) {
 		snap:     snapMgr,
 		manifest: &man,
 		lockFile: lockFile,
-	}, nil
+		stats:    newStatsTracker(),
+	}
+	walMgr.SetRotateHook(func() {
+		db.compactAsync()
+		_ = refreshManifest(opts.Path)
+	})
+	db.startSyncWorker()
+	db.startTTLWorker()
+	return db, nil
 }
 
 func withDefaults(opts Options) Options {

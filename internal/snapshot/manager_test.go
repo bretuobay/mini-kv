@@ -21,7 +21,7 @@ func TestSnapshotManagerExcludesExpiredKeys(t *testing.T) {
 				timestamp = -timestamp
 			}
 			manager := NewManager(t.TempDir())
-			path, err := manager.CreateSnapshot(entries, 1, timestamp)
+			path, err := manager.CreateSnapshot(entries, 1, timestamp, 1)
 			if err != nil {
 				return false
 			}
@@ -47,7 +47,7 @@ func TestSnapshotManagerExcludesExpiredKeys(t *testing.T) {
 
 func TestSnapshotManagerCreatesFile(t *testing.T) {
 	manager := NewManager(t.TempDir())
-	path, err := manager.CreateSnapshot([]Entry{{Key: []byte("a"), Value: []byte("b")}}, 1, 1)
+	path, err := manager.CreateSnapshot([]Entry{{Key: []byte("a"), Value: []byte("b")}}, 1, 1, 1)
 	if err != nil {
 		t.Fatalf("create snapshot: %v", err)
 	}

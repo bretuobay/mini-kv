@@ -12,6 +12,8 @@ func (db *DB) Close() error {
 	}
 	db.closed = true
 
+	db.stopWorkers()
+
 	var err error
 	if db.wal != nil {
 		if syncErr := db.wal.Sync(); syncErr != nil {

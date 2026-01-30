@@ -18,6 +18,7 @@ type WALManager struct {
 	currentSeq  uint64
 	currentSize int64
 	maxSize     int64
+	rotateHook  func()
 }
 
 // OpenWAL creates or opens a WAL directory and prepares the current segment.
@@ -48,26 +49,32 @@ func OpenWAL(dir string, maxSize int64) (*WALManager, error) {
 // AppendRecord writes an encoded record to the WAL, rotating if needed.
 func (w *WALManager) AppendRecord(record WALRecord) error {
 	encoded := EncodeWALRecord(record)
+	_, err := w.AppendRaw(encoded)
+	return err
+}
+
+// AppendRaw writes a pre-encoded record to the WAL, rotating if needed.
+func (w *WALManager) AppendRaw(encoded []byte) (int, error) {
 
 	w.mu.Lock()
 	defer w.mu.Unlock()
 
 	if w.currentFile == nil {
-		return os.ErrInvalid
+		return 0, os.ErrInvalid
 	}
 
 	if w.maxSize > 0 && w.currentSize+int64(len(encoded)) > w.maxSize {
 		if err := w.rotate(); err != nil {
-			return err
+			return 0, err
 		}
 	}
 
 	n, err := w.currentFile.Write(encoded)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	w.currentSize += int64(n)
-	return nil
+	return n, nil
 }
 
 // Sync flushes WAL data to disk.
@@ -92,6 +99,13 @@ func (w *WALManager) Close() error {
 	return err
 }
 
+// CurrentSeq returns the current WAL segment sequence.
+func (w *WALManager) CurrentSeq() uint64 {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return w.currentSeq
+}
+
 func (w *WALManager) rotate() error {
 	if w.currentFile != nil {
 		if err := w.currentFile.Sync(); err != nil {
@@ -108,7 +122,17 @@ func (w *WALManager) rotate() error {
 	}
 	w.currentFile = file
 	w.currentSize = size
+	if w.rotateHook != nil {
+		w.rotateHook()
+	}
 	return nil
+}
+
+// SetRotateHook registers a callback invoked after WAL rotation.
+func (w *WALManager) SetRotateHook(hook func()) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	w.rotateHook = hook
 }
 
 func openSegment(dir string, seq uint64) (*os.File, int64, error) {

@@ -100,20 +100,20 @@ func WriteManifest(path string, manifest Manifest) error {
 		file.Close()
 		return err
 	}
-		for _, seg := range manifest.WALSegments {
-			path := strconv.Quote(seg.Path)
-			if _, err := fmt.Fprintf(writer, "wal: %d %s\n", seg.Seq, path); err != nil {
-				file.Close()
-				return err
-			}
+	for _, seg := range manifest.WALSegments {
+		path := strconv.Quote(seg.Path)
+		if _, err := fmt.Fprintf(writer, "wal: %d %s\n", seg.Seq, path); err != nil {
+			file.Close()
+			return err
 		}
-		for _, snap := range manifest.Snapshots {
-			path := strconv.Quote(snap.Path)
-			if _, err := fmt.Fprintf(writer, "snapshot: %d %s\n", snap.Seq, path); err != nil {
-				file.Close()
-				return err
-			}
+	}
+	for _, snap := range manifest.Snapshots {
+		path := strconv.Quote(snap.Path)
+		if _, err := fmt.Fprintf(writer, "snapshot: %d %s\n", snap.Seq, path); err != nil {
+			file.Close()
+			return err
 		}
+	}
 	if err := writer.Flush(); err != nil {
 		file.Close()
 		return err
