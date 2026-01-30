@@ -46,3 +46,17 @@ func main() {
 ```
 go test ./benchmarks -bench . -run ^$
 ```
+
+## Documentation
+
+- `docs/architecture.md` — system design and background workers
+- `docs/file_formats.md` — WAL/snapshot/MANIFEST formats
+- `docs/migration_guide.md` — version notes
+
+## License
+
+MIT. See `LICENSE`.
+
+## Contributing
+
+See `CONTRIBUTING.md`.
