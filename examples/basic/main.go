@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"mini-kv"
+	"github.com/bretuobay/mini-kv"
 )
 
 func main() {

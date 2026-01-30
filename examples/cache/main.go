@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"mini-kv"
+	"github.com/bretuobay/mini-kv"
 )
 
 func main() {

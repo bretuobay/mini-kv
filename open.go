@@ -9,10 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	"mini-kv/internal/index"
-	"mini-kv/internal/manifest"
-	"mini-kv/internal/snapshot"
-	"mini-kv/internal/wal"
+	"github.com/bretuobay/mini-kv/internal/index"
+	"github.com/bretuobay/mini-kv/internal/manifest"
+	"github.com/bretuobay/mini-kv/internal/snapshot"
+	"github.com/bretuobay/mini-kv/internal/wal"
 )
 
 // Open opens or creates a database at the given path.

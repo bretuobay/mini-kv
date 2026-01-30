@@ -3,7 +3,7 @@ package minikv
 import (
 	"time"
 
-	"mini-kv/internal/wal"
+	"github.com/bretuobay/mini-kv/internal/wal"
 )
 
 func (db *DB) setWithExpiresAt(key []byte, value []byte, expiresAt int64) error {

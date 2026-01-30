@@ -3,7 +3,7 @@ package minikv
 import (
 	"testing"
 
-	"mini-kv/internal/index"
+	"github.com/bretuobay/mini-kv/internal/index"
 )
 
 func TestDeleteReadOnly(t *testing.T) {

@@ -5,7 +5,7 @@ MiniKV is a pure-Go, embedded key-value database with WAL durability, snapshots,
 ## Install
 
 ```bash
-go get ./...
+go get github.com/bretuobay/mini-kv
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ package main
 import (
     "log"
 
-    "mini-kv"
+    "github.com/bretuobay/mini-kv"
 )
 
 func main() {
@@ -31,6 +31,29 @@ func main() {
     log.Printf("%s", value)
 }
 ```
+
+## Configuration
+
+```go
+opts := minikv.DefaultOptions("./data")
+opts.SyncMode = minikv.SyncPeriodic // SyncAlways | SyncManual
+opts.ReadOnly = false
+```
+
+Defaults:
+- `MaxKeySize`: 1024 bytes
+- `MaxValueSize`: 10 MB
+- `MaxBatchSize`: 100 MB
+- `MaxWALSize`: 256 MB
+- `SyncMode`: `SyncPeriodic`
+
+## Errors
+
+Common errors:
+- `ErrNotFound`
+- `ErrKeyTooLarge`, `ErrValueTooLarge`
+- `ErrReadOnly`, `ErrClosed`, `ErrLocked`
+- `ErrInvalidValue`
 
 ## API Highlights
 
@@ -52,6 +75,10 @@ go test ./benchmarks -bench . -run ^$
 - `docs/architecture.md` — system design and background workers
 - `docs/file_formats.md` — WAL/snapshot/MANIFEST formats
 - `docs/migration_guide.md` — version notes
+
+## Repository
+
+Source: `https://github.com/bretuobay/mini-kv`
 
 ## License
 

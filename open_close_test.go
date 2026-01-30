@@ -10,7 +10,7 @@ import (
 	"github.com/leanovate/gopter/gen"
 	"github.com/leanovate/gopter/prop"
 
-	"mini-kv/internal/wal"
+	"github.com/bretuobay/mini-kv/internal/wal"
 )
 
 func TestOpenCloseReopenPreservesData(t *testing.T) {

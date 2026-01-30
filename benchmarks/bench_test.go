@@ -3,7 +3,7 @@ package benchmarks
 import (
 	"testing"
 
-	"mini-kv"
+	"github.com/bretuobay/mini-kv"
 )
 
 func BenchmarkSet(b *testing.B) {

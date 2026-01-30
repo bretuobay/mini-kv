@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"mini-kv/internal/index"
+	"github.com/bretuobay/mini-kv/internal/index"
 )
 
 func TestGetKeyTooLarge(t *testing.T) {

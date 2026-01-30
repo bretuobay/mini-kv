@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"mini-kv/internal/snapshot"
-	"mini-kv/internal/wal"
+	"github.com/bretuobay/mini-kv/internal/snapshot"
+	"github.com/bretuobay/mini-kv/internal/wal"
 )
 
 // Compact creates a snapshot and removes old WAL segments.

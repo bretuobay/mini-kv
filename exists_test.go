@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"mini-kv/internal/index"
+	"github.com/bretuobay/mini-kv/internal/index"
 )
 
 func TestExistsKeyTooLarge(t *testing.T) {

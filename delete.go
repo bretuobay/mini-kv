@@ -3,7 +3,7 @@ package minikv
 import (
 	"time"
 
-	"mini-kv/internal/wal"
+	"github.com/bretuobay/mini-kv/internal/wal"
 )
 
 // Delete removes a key if it exists.
